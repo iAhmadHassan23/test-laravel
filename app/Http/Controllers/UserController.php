@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Users;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\MySendMail;
+use App\Mail\SignUp;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -106,9 +106,12 @@ class UserController extends Controller
         return response()->json(['message'=>'User Add Successfully']);
     }
     public function delete_api_user($id){
+
         $user = Users::find($id);
         if($user){
             $user->delete();
+            $name = "Your User Has Been Deleted";
+            Mail::to('ahmadhassanqaiser@gmail.com')->send(new SignUp($name));
         }
         return response()->json(['message'=>'User Deleted Successfully']);
     }
@@ -124,7 +127,8 @@ class UserController extends Controller
                 $user->image = $logo_imagePic;
             }
             $user->save();
-            
+            $name = "Your User Has Been Updated";
+            Mail::to('ahmadhassanqaiser@gmail.com')->send(new SignUp($name));
             return response()->json(['message'=>'User Updated Successfully']);
         }
         else{
